@@ -1,12 +1,9 @@
 from datasets import load_dataset
 
-def load_dailydialog(split: str = "train"):
+def load_multiwoz(split: str = "train"):
     """
-    Load the DailyDialog dataset (explicit config).
+    Load the MultiWOZ 2.2 dialogue dataset.
+
+    Script-free, stable, and suitable for turn-taking exploration.
     """
-    return load_dataset(
-        "daily_dialog",
-        name="dialog",
-        split=split,
-        trust_remote_code=True
-    )
+    return load_dataset("multi_woz_v22", split=split)
