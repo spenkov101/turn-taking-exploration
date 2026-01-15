@@ -1,9 +1,12 @@
-from datasets import load_dataset
+import json
+from pathlib import Path
 
-def load_multiwoz(split: str = "train"):
-    """
-    Load the MultiWOZ 2.2 dialogue dataset.
+DATA_DIR = Path(__file__).parent.parent / "data"
 
-    Script-free, stable, and suitable for turn-taking exploration.
+def load_local_dialogues(filename: str = "sample_dialogues.json"):
     """
-    return load_dataset("multi_woz_v22", split=split)
+    Load local dialogue data for turn-taking exploration.
+    """
+    path = DATA_DIR / filename
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
