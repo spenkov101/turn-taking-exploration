@@ -4,10 +4,10 @@ def load_dailydialog(split: str = "train"):
     """
     Load the DailyDialog dataset.
 
-    Returns a HuggingFace Dataset object.
-    Each item contains:
-      - dialog: list[str]
-      - act: list[int]
-      - emotion: list[int]
+    Explicitly allow legacy dataset scripts.
     """
-    return load_dataset("daily_dialog", split=split)
+    return load_dataset(
+        "daily_dialog",
+        split=split,
+        trust_remote_code=True
+    )
