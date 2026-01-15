@@ -1,0 +1,12 @@
+[
+  {
+    "dialogue_id": "ex_001",
+    "language": "en",
+    "turns": [
+      {"speaker": "A", "text": "Hi, how are you?"},
+      {"speaker": "B", "text": "I'm good, thanks. And you?"},
+      {"speaker": "A", "text": "Doing well. What are you working on?"},
+      {"speaker": "B", "text": "Just finishing a project."}
+    ]
+  }
+]
