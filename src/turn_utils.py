@@ -1,6 +1,6 @@
 import re
 from typing import List, Optional
-
+from collections import Counter
 TOKEN_RE = re.compile(r"\w+|[^\w\s]")
 
 def last_token(text: str) -> str:
@@ -22,3 +22,19 @@ def turn_last_tokens(dialogue: List[str], n: Optional[int] = None) -> List[str]:
     selected = dialogue if n is None else dialogue[:n]
     return [last_token(utt) for utt in selected]
 
+
+
+def last_token_frequency(dialogues):
+    """
+    Compute frequency of last tokens across all turns
+    in a list of dialogue dicts.
+    """
+    freq = Counter()
+
+    for d in dialogues:
+        for turn in d["turns"]:
+            token = last_token(turn["text"])
+            if token:
+                freq[token] += 1
+
+    return freq
