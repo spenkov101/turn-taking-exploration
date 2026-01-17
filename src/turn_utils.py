@@ -38,3 +38,21 @@ def last_token_frequency(dialogues):
                 freq[token] += 1
 
     return freq
+
+def question_ratio(dialogues):
+    """
+    Compute how many turns end with a question mark.
+    Returns (num_questions, total_turns, ratio).
+    """
+    total = 0
+    questions = 0
+
+    for d in dialogues:
+        for turn in d["turns"]:
+            total += 1
+            if turn["text"].strip().endswith("?"):
+                questions += 1
+
+    ratio = questions / total if total > 0 else 0.0
+    return questions, total, ratio
+
