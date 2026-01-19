@@ -55,4 +55,31 @@ def question_ratio(dialogues):
 
     ratio = questions / total if total > 0 else 0.0
     return questions, total, ratio
+def avg_turn_length_by_type(dialogues):
+    """
+    Compute average turn length (in tokens) for
+    question-ending vs non-question turns.
+    """
+    q_len = 0
+    q_count = 0
+    s_len = 0
+    s_count = 0
+
+    for d in dialogues:
+        for turn in d["turns"]:
+            tokens = turn["text"].split()
+            if not tokens:
+                continue
+
+            if turn["text"].strip().endswith("?"):
+                q_len += len(tokens)
+                q_count += 1
+            else:
+                s_len += len(tokens)
+                s_count += 1
+
+    avg_q = q_len / q_count if q_count else 0.0
+    avg_s = s_len / s_count if s_count else 0.0
+
+    return avg_q, avg_s
 
