@@ -83,3 +83,20 @@ def avg_turn_length_by_type(dialogues):
 
     return avg_q, avg_s
 
+def speaker_alternation_rate(dialogues):
+    """
+    Compute how often consecutive turns switch speakers.
+    Returns (num_switches, total_transitions, rate).
+    """
+    switches = 0
+    transitions = 0
+
+    for d in dialogues:
+        turns = d["turns"]
+        for i in range(1, len(turns)):
+            transitions += 1
+            if turns[i]["speaker"] != turns[i - 1]["speaker"]:
+                switches += 1
+
+    rate = switches / transitions if transitions > 0 else 0.0
+    return switches, transitions, rate
