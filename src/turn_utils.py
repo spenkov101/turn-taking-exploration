@@ -1,6 +1,6 @@
 import re
 from typing import List, Optional
-from collections import Counter
+from collections import Counter, defaultdict
 TOKEN_RE = re.compile(r"\w+|[^\w\s]")
 
 def last_token(text: str) -> str:
@@ -100,3 +100,23 @@ def speaker_alternation_rate(dialogues):
 
     rate = switches / transitions if transitions > 0 else 0.0
     return switches, transitions, rate
+
+
+def avg_turn_length_per_speaker(dialogues):
+    """
+    Compute average turn length (in tokens) per speaker.
+    Returns dict: {speaker: avg_length}
+    """
+    totals = defaultdict(int)
+    counts = defaultdict(int)
+
+    for d in dialogues:
+        for turn in d["turns"]:
+            tokens = turn["text"].split()
+            if not tokens:
+                continue
+            spk = turn["speaker"]
+            totals[spk] += len(tokens)
+            counts[spk] += 1
+
+    return {spk: totals[spk] / counts[spk] for spk in counts}
