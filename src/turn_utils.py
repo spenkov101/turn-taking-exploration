@@ -120,3 +120,27 @@ def avg_turn_length_per_speaker(dialogues):
             counts[spk] += 1
 
     return {spk: totals[spk] / counts[spk] for spk in counts}
+
+
+
+def turn_final_punctuation(dialogues):
+    """
+    Count how often turns end with '.', '?', '!', or other.
+    Returns a Counter.
+    """
+    counts = Counter()
+
+    for d in dialogues:
+        for turn in d["turns"]:
+            text = turn["text"].strip()
+            if not text:
+                continue
+
+            last_char = text[-1]
+            if last_char in {".", "?", "!"}:
+                counts[last_char] += 1
+            else:
+                counts["other"] += 1
+
+    return counts
+
