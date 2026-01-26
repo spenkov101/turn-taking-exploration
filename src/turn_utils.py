@@ -144,3 +144,45 @@ def turn_final_punctuation(dialogues):
 
     return counts
 
+def ending_vs_speaker_switch(dialogues):
+    """
+    Analyze whether certain turn endings correlate with speaker switches.
+
+    Returns:
+        dict: {
+            ending_type: {
+                "switches": int,
+                "total": int,
+                "switch_rate": float
+            }
+        }
+    """
+    stats = defaultdict(lambda: {"switches": 0, "total": 0})
+
+    for d in dialogues:
+        turns = d["turns"]
+
+        for i in range(len(turns) - 1):
+            current = turns[i]
+            nxt = turns[i + 1]
+
+            text = current["text"].strip()
+            if not text:
+                continue
+
+            last_char = text[-1]
+            if last_char not in {".", "?", "!"}:
+                last_char = "other"
+
+            stats[last_char]["total"] += 1
+            if current["speaker"] != nxt["speaker"]:
+                stats[last_char]["switches"] += 1
+
+    # compute rates
+    for ending in stats:
+        total = stats[ending]["total"]
+        switches = stats[ending]["switches"]
+        stats[ending]["switch_rate"] = switches / total if total else 0.0
+
+    return dict(stats)
+
