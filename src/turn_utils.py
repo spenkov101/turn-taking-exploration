@@ -186,3 +186,17 @@ def ending_vs_speaker_switch(dialogues):
 
     return dict(stats)
 
+def turn_length_list(dialogues):
+    """
+    Return a list of turn lengths (in tokens) across all dialogues.
+    Useful for later distribution analysis.
+    """
+    lengths = []
+
+    for d in dialogues:
+        for turn in d["turns"]:
+            tokens = turn["text"].split()
+            if tokens:
+                lengths.append(len(tokens))
+
+    return lengths
