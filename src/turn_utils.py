@@ -200,3 +200,44 @@ def turn_length_list(dialogues):
                 lengths.append(len(tokens))
 
     return lengths
+
+FILLERS = {"uh", "um", "erm", "hmm"}
+
+def filler_before_switch(dialogues):
+    """
+    Check how often turns ending with a filler are followed by a speaker switch.
+
+    Returns:
+        {
+            "filler_turns": int,
+            "switch_after_filler": int,
+            "switch_rate": float
+        }
+    """
+    filler_turns = 0
+    switch_after_filler = 0
+
+    for d in dialogues:
+        turns = d["turns"]
+
+        for i in range(len(turns) - 1):
+            current = turns[i]["text"].strip().lower()
+            next_speaker = turns[i + 1]["speaker"]
+            curr_speaker = turns[i]["speaker"]
+
+            tokens = current.split()
+            if not tokens:
+                continue
+
+            if tokens[-1].strip(".,!?") in FILLERS:
+                filler_turns += 1
+                if curr_speaker != next_speaker:
+                    switch_after_filler += 1
+
+    rate = switch_after_filler / filler_turns if filler_turns else 0.0
+
+    return {
+        "filler_turns": filler_turns,
+        "switch_after_filler": switch_after_filler,
+        "switch_rate": rate
+    }
