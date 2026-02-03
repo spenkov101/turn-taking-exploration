@@ -241,3 +241,28 @@ def filler_before_switch(dialogues):
         "switch_after_filler": switch_after_filler,
         "switch_rate": rate
     }
+def count_fillers(dialogues):
+    """
+    Count occurrences of filler words within turns.
+    Returns total filler count and per-speaker counts.
+    """
+    FILLERS = {"uh", "um", "erm", "hmm"}
+    total = 0
+    per_speaker = {}
+
+    for d in dialogues:
+        for turn in d["turns"]:
+            spk = turn["speaker"]
+            text = turn["text"].lower()
+
+            tokens = [t.strip(".,!?") for t in text.split()]
+            count = sum(1 for t in tokens if t in FILLERS)
+
+            if count > 0:
+                total += count
+                per_speaker[spk] = per_speaker.get(spk, 0) + count
+
+    return {
+        "total_fillers": total,
+        "per_speaker": per_speaker
+    }
