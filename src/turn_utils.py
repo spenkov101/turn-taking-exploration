@@ -261,7 +261,39 @@ def count_fillers(dialogues):
             if count > 0:
                 total += count
                 per_speaker[spk] = per_speaker.get(spk, 0) + count
+def response_length_ratio(dialogues):
+    """
+    Compute distribution of response length ratios.
 
+    Ratio = len(next_turn) / len(current_turn)
+
+    Returns:
+        {
+            "avg_ratio": float,
+            "ratios": list[float]
+        }
+    """
+    ratios = []
+
+    for d in dialogues:
+        turns = d["turns"]
+
+        for i in range(len(turns) - 1):
+            curr_tokens = turns[i]["text"].split()
+            next_tokens = turns[i + 1]["text"].split()
+
+            if not curr_tokens or not next_tokens:
+                continue
+
+            ratio = len(next_tokens) / len(curr_tokens)
+            ratios.append(ratio)
+
+    avg_ratio = sum(ratios) / len(ratios) if ratios else 0.0
+
+    return {
+        "avg_ratio": avg_ratio,
+        "ratios": ratios
+    }
     return {
         "total_fillers": total,
         "per_speaker": per_speaker
