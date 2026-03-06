@@ -298,3 +298,44 @@ def response_length_ratio(dialogues):
         "total_fillers": total,
         "per_speaker": per_speaker
     }
+
+def speaker_balance(turns):
+    """
+    Compute speaker balance in a dialogue.
+
+    Parameters
+    ----------
+    turns : list of dict
+        Example:
+        [
+            {"speaker": "A", "text": "Hello"},
+            {"speaker": "B", "text": "Hi"},
+        ]
+
+    Returns
+    -------
+    dict
+        word counts and balance ratio
+    """
+
+    speaker_words = {}
+
+    for turn in turns:
+        speaker = turn["speaker"]
+        words = len(turn["text"].split())
+
+        if speaker not in speaker_words:
+            speaker_words[speaker] = 0
+
+        speaker_words[speaker] += words
+
+    if len(speaker_words) == 2:
+        values = list(speaker_words.values())
+        ratio = min(values) / max(values)
+    else:
+        ratio = None
+
+    return {
+        "speaker_words": speaker_words,
+        "balance_ratio": ratio
+    }
