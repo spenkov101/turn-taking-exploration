@@ -38,6 +38,8 @@ def get_wav_duration(filepath: str | Path) -> float | None:
             return frames / float(rate)
     except Exception:
         return None
+
+
 def get_turn_durations(audio_dir):
     """
     Compute durations for all WAV audio files in a directory.
@@ -128,4 +130,53 @@ def compute_speaker_dominance(turns):
     return {
         speaker: time / total_time
         for speaker, time in speaker_times.items()
+    }
+
+def compute_turn_statistics(turns):
+    """
+    Compute basic statistics about turn durations.
+
+    Args:
+        turns (list of dict):
+            [
+                {"speaker": "A", "duration": 1.2},
+                {"speaker": "B", "duration": 0.8},
+            ]
+
+    Returns:
+        dict:
+        {
+            "turn_count": int,
+            "avg_turn_length": float,
+            "median_turn_length": float,
+            "max_turn_length": float
+        }
+    """
+    durations = [turn.get("duration", 0) for turn in turns if turn.get("duration") is not None]
+
+    if not durations:
+        return {
+            "turn_count": 0,
+            "avg_turn_length": 0,
+            "median_turn_length": 0,
+            "max_turn_length": 0
+        }
+
+    durations_sorted = sorted(durations)
+    count = len(durations)
+
+    avg = sum(durations) / count
+    max_len = max(durations)
+
+    mid = count // 2
+    if count % 2 == 0:
+        median = (durations_sorted[mid - 1] + durations_sorted[mid]) / 2
+    else:
+        median = durations_sorted[mid]
+
+    return {
+        "turn_count": count,
+        "avg_turn_length": avg,
+        "median_turn_length": median,
+        "max_turn_length": max_len
     }
