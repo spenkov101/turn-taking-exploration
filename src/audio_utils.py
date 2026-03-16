@@ -65,3 +65,67 @@ def get_turn_durations(audio_dir):
             })
 
     return results
+
+def compute_total_speech_time(turns):
+    """
+    Compute total speech time across all turns.
+
+    Args:
+        turns (list of dict):
+            [
+                {"speaker": "A", "duration": 1.2},
+                {"speaker": "B", "duration": 0.8},
+                {"speaker": "A", "duration": 2.1},
+            ]
+
+    Returns:
+        float:
+            total speech time in seconds
+    """
+    total_time = 0.0
+
+    for turn in turns:
+        duration = turn.get("duration", 0)
+        total_time += duration
+
+    return total_time
+
+
+def compute_speaker_dominance(turns):
+    """
+    Compute speaker dominance based on turn durations.
+
+    Args:
+        turns (list of dict):
+            [
+                {"speaker": "A", "duration": 1.2},
+                {"speaker": "B", "duration": 0.8},
+                {"speaker": "A", "duration": 2.1},
+            ]
+
+    Returns:
+        dict:
+        {
+            "A": 0.65,
+            "B": 0.35
+        }
+        Values represent proportion of total speaking time.
+    """
+    speaker_times = {}
+    total_time = 0.0
+
+    for turn in turns:
+        speaker = turn["speaker"]
+        duration = turn["duration"]
+
+        speaker_times.setdefault(speaker, 0)
+        speaker_times[speaker] += duration
+        total_time += duration
+
+    if total_time == 0:
+        return {}
+
+    return {
+        speaker: time / total_time
+        for speaker, time in speaker_times.items()
+    }
